@@ -207,7 +207,40 @@ export const agentMode: Mode = {
   },
 
   getSystemPrompt() {
-    // Agent mode doesn't need additional system prompts
-    return undefined;
+    // Check for custom memory extraction prompt from environment
+    const customPrompt = process.env.FLOWCON_MEMORY_PROMPT;
+
+    if (customPrompt) {
+      return customPrompt;
+    }
+
+    // Default memory extraction prompt with few-shot examples
+    return `
+ADDITIONAL TASK: Documentation and Knowledge Extraction
+
+After analyzing the code changes, also:
+
+1. DOCUMENTATION SUGGESTIONS
+For each code change that affects documented behavior:
+- Identify which doc file(s) need updates
+- Generate suggestions in GitHub suggestion format
+
+2. MEMORY EXTRACTION
+Extract key knowledge for the AI assistant.
+Each memory MUST be:
+- 4-6 sentences minimum
+- Describe relationships between components
+- Include specific names (classes, methods, patterns)
+
+Return memories as JSON array in a <memories> tag.
+
+Example output:
+<memories>
+[
+  {"content": "The AuthService class handles JWT token validation and refresh. It depends on UserRepository for credential verification and uses bcrypt for password hashing. The service implements a singleton pattern to maintain a single connection pool to the auth database. All authentication errors are logged to the security audit trail.", "tags": ["auth", "security", "architecture"]},
+  {"content": "API rate limiting is implemented via Redis with a sliding window algorithm. The RateLimiter middleware checks X-API-Key header and enforces 100 req/min per key. Rate limit counters expire after 60 seconds. When a limit is exceeded, the middleware returns a 429 status with a Retry-After header indicating when the client can retry.", "tags": ["api", "rate-limiting", "infrastructure"]}
+]
+</memories>
+`.trim();
   },
 };

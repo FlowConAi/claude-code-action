@@ -132,6 +132,10 @@ inputs:
   flowcon_group_id:
     description: "Graphiti group ID for memory organization"
     required: false
+  flowcon_memory_prompt:
+    description: "Custom prompt for memory extraction. If not provided, uses default prompt with few-shot examples."
+    required: false
+    default: ""
 
 outputs:
   execution_file:
@@ -312,6 +316,7 @@ runs:
         FLOWCON_PAT: ${{ inputs.flowcon_pat }}
         FLOWCON_SERVER: ${{ inputs.flowcon_server }}
         FLOWCON_GROUP_ID: ${{ inputs.flowcon_group_id }}
+        FLOWCON_MEMORY_PROMPT: ${{ inputs.flowcon_memory_prompt }}
 
     - name: Update comment with job link
       if: steps.prepare.outputs.contains_trigger == 'true' && steps.prepare.outputs.claude_comment_id && always()
