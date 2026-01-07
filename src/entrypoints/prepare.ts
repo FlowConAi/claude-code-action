@@ -76,6 +76,13 @@ async function run() {
     // Expose the GitHub token (Claude App token) as an output
     core.setOutput("github_token", githubToken);
 
+    // Export PR context for FlowCon integration (if applicable)
+    if (isEntityContext(context)) {
+      core.exportVariable("PR_NUMBER", context.entityNumber.toString());
+      core.exportVariable("REPO_OWNER", context.repository.owner);
+      core.exportVariable("REPO_NAME", context.repository.repo);
+    }
+
     // Step 6: Get system prompt from mode if available
     if (mode.getSystemPrompt) {
       const modeContext = mode.prepareContext(context, {

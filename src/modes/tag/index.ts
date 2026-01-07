@@ -242,7 +242,27 @@ ${context.githubContext.inputs.prompt}
   },
 
   getSystemPrompt() {
-    // Tag mode doesn't need additional system prompts
-    return undefined;
+    return `
+ADDITIONAL TASK: Documentation and Knowledge Extraction
+
+After analyzing the code changes, also:
+
+1. DOCUMENTATION SUGGESTIONS
+For each code change that affects documented behavior:
+- Identify which doc file(s) need updates
+- Generate suggestions in GitHub suggestion format
+
+2. MEMORY EXTRACTION
+Extract key knowledge for the AI assistant.
+Each memory MUST be:
+- 4-6 sentences minimum
+- Describe relationships between components
+- Include specific names (classes, methods, patterns)
+
+Return memories as JSON array in a <memories> tag:
+<memories>
+["Memory 1 with 4-6 sentences...", "Memory 2..."]
+</memories>
+`.trim();
   },
 };

@@ -216,4 +216,28 @@ export async function runClaudeWithSdk(
     }
     process.exit(1);
   }
+
+  // Send memories to FlowCon if configured (non-blocking)
+  try {
+    // Import dynamically to avoid circular dependencies
+    const { sendMemoriesToFlowCon } = await import(
+      "../../src/flowcon-integration"
+    );
+
+    // Extract PR context from environment
+    const prNumber = process.env.PR_NUMBER;
+    const repoOwner = process.env.REPO_OWNER;
+    const repoName = process.env.REPO_NAME;
+
+    if (prNumber && repoOwner && repoName) {
+      await sendMemoriesToFlowCon(messages, {
+        pr_number: prNumber,
+        repo_owner: repoOwner,
+        repo_name: repoName,
+      });
+    }
+  } catch (error) {
+    // FlowCon integration is non-blocking - log warning but don't fail
+    core.warning(`FlowCon integration warning: ${error}`);
+  }
 }

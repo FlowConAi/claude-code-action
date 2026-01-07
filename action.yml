@@ -122,6 +122,17 @@ inputs:
     required: false
     default: ""
 
+  # FlowCon memory storage configuration
+  flowcon_pat:
+    description: "FlowCon PAT token for memory storage"
+    required: false
+  flowcon_server:
+    description: "FlowCon server URL (e.g., https://flowcon.example.com)"
+    required: false
+  flowcon_group_id:
+    description: "Graphiti group ID for memory organization"
+    required: false
+
 outputs:
   execution_file:
     description: "Path to the Claude Code execution output file"
@@ -296,6 +307,11 @@ runs:
         ANTHROPIC_DEFAULT_SONNET_MODEL: ${{ env.ANTHROPIC_DEFAULT_SONNET_MODEL }}
         ANTHROPIC_DEFAULT_HAIKU_MODEL: ${{ env.ANTHROPIC_DEFAULT_HAIKU_MODEL }}
         ANTHROPIC_DEFAULT_OPUS_MODEL: ${{ env.ANTHROPIC_DEFAULT_OPUS_MODEL }}
+
+        # FlowCon configuration
+        FLOWCON_PAT: ${{ inputs.flowcon_pat }}
+        FLOWCON_SERVER: ${{ inputs.flowcon_server }}
+        FLOWCON_GROUP_ID: ${{ inputs.flowcon_group_id }}
 
     - name: Update comment with job link
       if: steps.prepare.outputs.contains_trigger == 'true' && steps.prepare.outputs.claude_comment_id && always()
