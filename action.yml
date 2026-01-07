@@ -122,16 +122,16 @@ inputs:
     required: false
     default: ""
 
-  # FlowCon memory storage configuration
+  # FlowCon memory storage configuration (required for this fork)
   flowcon_pat:
     description: "FlowCon PAT token for memory storage"
-    required: false
+    required: true
   flowcon_server:
     description: "FlowCon server URL (e.g., https://flowcon.example.com)"
-    required: false
+    required: true
   flowcon_group_id:
     description: "Graphiti group ID for memory organization"
-    required: false
+    required: true
   flowcon_memory_prompt:
     description: "Custom prompt for memory extraction. If not provided, uses default prompt with few-shot examples."
     required: false
